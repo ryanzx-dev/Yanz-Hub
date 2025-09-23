@@ -1,5 +1,5 @@
 local EXPECTED_PLACE_ID = 100438336521838
-local SCRIPT_URL = "https://raw.githubusercontent.com/ryanzx-dev/Yanz-Hub/refs/heads/main/script.lua"
+local SCRIPT_URL = "https://raw.githubusercontent.com/ryanzx-dev/Yanz-Hub/refs/heads/main/main.lua"
 
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
