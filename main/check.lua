@@ -2,7 +2,6 @@ local EXPECTED_PLACE_ID = 100438336521838
 local SCRIPT_URL = "https://raw.githubusercontent.com/ryanzx-dev/Yanz-Hub/refs/heads/main/script.lua"
 
 local Players = game:GetService("Players")
-local TweenService = game:GetService("TweenService")
 local player = Players.LocalPlayer
 
 local function notify(text, duration)
@@ -25,7 +24,7 @@ local function notify(text, duration)
     frame.AnchorPoint = Vector2.new(0.5, 0)
     frame.Position = UDim2.new(0.5, 0, 0.05, 0)
     frame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-    frame.BackgroundTransparency = 1
+    frame.BackgroundTransparency = 0.15
     frame.BorderSizePixel = 0
     frame.Parent = gui
     local label = Instance.new("TextLabel")
@@ -33,22 +32,11 @@ local function notify(text, duration)
     label.Position = UDim2.new(0, 5, 0, 5)
     label.BackgroundTransparency = 1
     label.TextColor3 = Color3.fromRGB(255, 255, 255)
-    label.TextTransparency = 1
     label.TextScaled = true
     label.Font = Enum.Font.GothamBold
     label.Text = text
     label.Parent = frame
-    local fadeIn = TweenInfo.new(0.3, Enum.EasingStyle.Sine, Enum.EasingDirection.Out)
-    local fadeOut = TweenInfo.new(0.3, Enum.EasingStyle.Sine, Enum.EasingDirection.In)
-    TweenService:Create(frame, fadeIn, {BackgroundTransparency = 0.15}):Play()
-    TweenService:Create(label, fadeIn, {TextTransparency = 0}):Play()
-    task.delay(duration, function()
-        TweenService:Create(frame, fadeOut, {BackgroundTransparency = 1}):Play()
-        local tween = TweenService:Create(label, fadeOut, {TextTransparency = 1})
-        tween:Play()
-        tween.Completed:Wait()
-        gui:Destroy()
-    end)
+    game:GetService("Debris"):AddItem(gui, duration)
 end
 
 local function fetchAndRun(url)
@@ -76,22 +64,12 @@ local function checkAndExecute()
     wait(1.5)
     if game.PlaceId == EXPECTED_PLACE_ID then
         notify("YANZ HUB LOADED", 3)
-        task.delay(0.5, function()
-            fetchAndRun(SCRIPT_URL)
-        end)
-    else
-        notify("PLS JOIN RIP BRAINROT MAP", 7)
-        warn("Wrong map, expected:", EXPECTED_PLACE_ID, "current:", game.PlaceId)
-    end
-end
-
-checkAndExecute()        notify("YANZ HUB LOADED", 3)
         spawn(function()
             wait(0.5)
             fetchAndRun(SCRIPT_URL)
         end)
     else
-        notify("PLS JOIN RIP BRAINROT MAP", 4)
+        notify("PLS JOIN RIP BRAINROT MAP", 7)
         warn("Wrong map, expected:", EXPECTED_PLACE_ID, "current:", game.PlaceId)
     end
 end
