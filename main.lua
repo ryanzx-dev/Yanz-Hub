@@ -432,11 +432,20 @@ do
     local autoLockToggleCorner = Instance.new("UICorner")
     autoLockToggleCorner.CornerRadius = UDim.new(0, 10)
     autoLockToggleCorner.Parent = autoLockToggle
-    -- === Invisible Frame ===
+-- === INVISIBLE FEATURE (Body Detach Style) ===
+
+local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+
+local invisActive = false
+local storedParts = {}
+
+-- Frame GUI
 local invisibleFrame = Instance.new("Frame")
 invisibleFrame.Name = "InvisibleFrame"
 invisibleFrame.Size = UDim2.new(0, 250, 0, 30)
-invisibleFrame.Position = UDim2.new(0, 10, 1, -105) -- taruh di bawah AutoClaim & AutoLock
+invisibleFrame.Position = UDim2.new(0, 10, 1, -140) -- posisinya pas di bawah AutoLock
 invisibleFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
 invisibleFrame.BorderSizePixel = 0
 invisibleFrame.Parent = mainFrame
@@ -473,39 +482,39 @@ local invisibleToggleCorner = Instance.new("UICorner")
 invisibleToggleCorner.CornerRadius = UDim.new(0, 10)
 invisibleToggleCorner.Parent = invisibleToggle
 
--- === Logic Invisible ===
-local invisActive = false
-local player = game.Players.LocalPlayer
-
+-- Logic invisibility
 local function setInvisible(state)
-    local character = player.Character or player.CharacterAdded:Wait()
+    local char = player.Character
+    if not char then return end
+
     if state then
-        -- Bikin tidak terlihat oleh orang lain
-        for _, part in ipairs(character:GetChildren()) do
+        -- Pisahkan semua bodypart kecuali HumanoidRootPart
+        for _, part in ipairs(char:GetChildren()) do
             if part:IsA("BasePart") and part.Name ~= "HumanoidRootPart" then
+                table.insert(storedParts, part)
+
+                -- Clone buat dijatuhkan di tanah
+                local clone = part:Clone()
+                clone.Anchored = false
+                clone.CanCollide = true
+                clone.Parent = workspace
+                clone.CFrame = part.CFrame
+
+                -- Sembunyikan part asli
                 part.Transparency = 1
                 part.CanCollide = false
             end
         end
-        -- Tapi tetap terlihat oleh diri sendiri
-        for _, part in ipairs(character:GetChildren()) do
-            if part:IsA("BasePart") then
-                part.LocalTransparencyModifier = 0
-            end
-        end
+        print("✅ Invisible ON (detach body)")
     else
-        -- Balikin ke normal
-        for _, part in ipairs(character:GetChildren()) do
-            if part:IsA("BasePart") then
-                part.Transparency = 0
-                part.LocalTransparencyModifier = 0
-                part.CanCollide = true
-            end
-        end
+        -- Kembalikan normal (reset biar aman)
+        storedParts = {}
+        player:LoadCharacter()
+        print("❌ Invisible OFF (character reset)")
     end
 end
 
--- === Toggle Button ===
+-- Toggle handler
 invisibleToggle.MouseButton1Click:Connect(function()
     invisActive = not invisActive
     if invisActive then
