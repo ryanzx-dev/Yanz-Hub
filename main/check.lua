@@ -1,6 +1,6 @@
 local EXPECTED_PLACE_ID = 100438336521838
 local SCRIPT_URL = "https://raw.githubusercontent.com/ryanzx-dev/Yanz-Hub/refs/heads/main/main.lua"
-
+local SCRIPT_URL2 = "https://raw.githubusercontent.com/ryanzx-dev/Yanz-Hub/refs/heads/main/invis.lua"
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
 
@@ -63,13 +63,16 @@ local function checkAndExecute()
     notify("loading..", 2)
     wait(1.5)
     if game.PlaceId == EXPECTED_PLACE_ID then
-        notify("YANZ HUB LOADED", 3)
+        notify("YANZ HUB LOADED", 2)
+        wait(1.5)
         spawn(function()
             wait(0.5)
             fetchAndRun(SCRIPT_URL)
+            fetchAndRun(SCRIPT_URL2)
         end)
     else
-        notify("PLS JOIN RIP BRAINROT MAP", 7)
+        notify("PLS JOIN RIP BRAINROT MAP", 2)
+        wait(1.5)
         warn("Wrong map, expected:", EXPECTED_PLACE_ID, "current:", game.PlaceId)
     end
 end
