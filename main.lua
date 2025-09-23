@@ -392,83 +392,7 @@ do
     local autoClaimToggleCorner = Instance.new("UICorner")
     autoClaimToggleCorner.CornerRadius = UDim.new(0, 10)
     autoClaimToggleCorner.Parent = autoClaimToggle
-    -- Frame untuk Invisible
-local invisFrame = Instance.new("Frame")
-invisFrame.Name = "InvisibleFrame"
-invisFrame.Size = UDim2.new(0, 250, 0, 30)
-invisFrame.Position = UDim2.new(0, 10, 1, -105) -- posisinya di bawah AutoLockFrame
-invisFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
-invisFrame.BorderSizePixel = 0
-invisFrame.Parent = mainFrame
-
-local invisCorner = Instance.new("UICorner")
-invisCorner.CornerRadius = UDim.new(0, 6)
-invisCorner.Parent = invisFrame
-
-local invisLabel = Instance.new("TextLabel")
-invisLabel.Name = "InvisibleLabel"
-invisLabel.Size = UDim2.new(0, 150, 1, 0)
-invisLabel.Position = UDim2.new(0, 5, 0, 0)
-invisLabel.BackgroundTransparency = 1
-invisLabel.Text = "Invisible:"
-invisLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-invisLabel.TextScaled = true
-invisLabel.Font = Enum.Font.Gotham
-invisLabel.TextXAlignment = Enum.TextXAlignment.Left
-invisLabel.Parent = invisFrame
-
-local invisToggle = Instance.new("TextButton")
-invisToggle.Name = "InvisibleToggle"
-invisToggle.Size = UDim2.new(0, 60, 0, 20)
-invisToggle.Position = UDim2.new(1, -65, 0, 5)
-invisToggle.BackgroundColor3 = Color3.fromRGB(220, 50, 50) -- awalnya OFF
-invisToggle.BorderSizePixel = 0
-invisToggle.Text = "OFF"
-invisToggle.TextColor3 = Color3.fromRGB(255, 255, 255)
-invisToggle.TextScaled = true
-invisToggle.Font = Enum.Font.GothamBold
-invisToggle.Parent = invisFrame
-
-local invisToggleCorner = Instance.new("UICorner")
-invisToggleCorner.CornerRadius = UDim.new(0, 10)
-invisToggleCorner.Parent = invisToggle
-
--- Variabel invisible
-local isInvisible = false
-
--- Fungsi Invisible
-local function setInvisible(state)
-    local character = player.Character
-    if not character then return end
-
-    if state then
-        -- Turunkan semua BasePart supaya tidak kelihatan
-        for _, part in pairs(character:GetChildren()) do
-            if part:IsA("BasePart") then
-                part.CFrame = part.CFrame * CFrame.new(0, -1000, 0)
-            end
-        end
-        Wave.Console.info("Invisible ON")
-    else
-        -- Reset karakter biar kembali normal
-        player:LoadCharacter()
-        Wave.Console.info("Invisible OFF - character reset")
-    end
-end
-
--- Event tombol toggle
-invisToggle.MouseButton1Click:Connect(function()
-    isInvisible = not isInvisible
-    if isInvisible then
-        invisToggle.BackgroundColor3 = Color3.fromRGB(50, 200, 50)
-        invisToggle.Text = "ON"
-        setInvisible(true)
-    else
-        invisToggle.BackgroundColor3 = Color3.fromRGB(220, 50, 50)
-        invisToggle.Text = "OFF"
-        setInvisible(false)
-    end
-end)
+    
     local autoLockFrame = Instance.new("Frame")
     autoLockFrame.Name = "AutoLockFrame"
     autoLockFrame.Size = UDim2.new(0, 250, 0, 30)
@@ -508,6 +432,92 @@ end)
     local autoLockToggleCorner = Instance.new("UICorner")
     autoLockToggleCorner.CornerRadius = UDim.new(0, 10)
     autoLockToggleCorner.Parent = autoLockToggle
+    -- === Invisible Frame ===
+local invisibleFrame = Instance.new("Frame")
+invisibleFrame.Name = "InvisibleFrame"
+invisibleFrame.Size = UDim2.new(0, 250, 0, 30)
+invisibleFrame.Position = UDim2.new(0, 10, 1, -105) -- taruh di bawah AutoClaim & AutoLock
+invisibleFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+invisibleFrame.BorderSizePixel = 0
+invisibleFrame.Parent = mainFrame
+
+local invisibleCorner = Instance.new("UICorner")
+invisibleCorner.CornerRadius = UDim.new(0, 6)
+invisibleCorner.Parent = invisibleFrame
+
+local invisibleLabel = Instance.new("TextLabel")
+invisibleLabel.Name = "InvisibleLabel"
+invisibleLabel.Size = UDim2.new(0, 150, 1, 0)
+invisibleLabel.Position = UDim2.new(0, 5, 0, 0)
+invisibleLabel.BackgroundTransparency = 1
+invisibleLabel.Text = "Invisible:"
+invisibleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+invisibleLabel.TextScaled = true
+invisibleLabel.Font = Enum.Font.Gotham
+invisibleLabel.TextXAlignment = Enum.TextXAlignment.Left
+invisibleLabel.Parent = invisibleFrame
+
+local invisibleToggle = Instance.new("TextButton")
+invisibleToggle.Name = "InvisibleToggle"
+invisibleToggle.Size = UDim2.new(0, 60, 0, 20)
+invisibleToggle.Position = UDim2.new(1, -65, 0, 5)
+invisibleToggle.BackgroundColor3 = Color3.fromRGB(220, 50, 50)
+invisibleToggle.BorderSizePixel = 0
+invisibleToggle.Text = "OFF"
+invisibleToggle.TextColor3 = Color3.fromRGB(255, 255, 255)
+invisibleToggle.TextScaled = true
+invisibleToggle.Font = Enum.Font.GothamBold
+invisibleToggle.Parent = invisibleFrame
+
+local invisibleToggleCorner = Instance.new("UICorner")
+invisibleToggleCorner.CornerRadius = UDim.new(0, 10)
+invisibleToggleCorner.Parent = invisibleToggle
+
+-- === Logic Invisible ===
+local invisActive = false
+local player = game.Players.LocalPlayer
+
+local function setInvisible(state)
+    local character = player.Character or player.CharacterAdded:Wait()
+    if state then
+        -- Bikin tidak terlihat oleh orang lain
+        for _, part in ipairs(character:GetChildren()) do
+            if part:IsA("BasePart") and part.Name ~= "HumanoidRootPart" then
+                part.Transparency = 1
+                part.CanCollide = false
+            end
+        end
+        -- Tapi tetap terlihat oleh diri sendiri
+        for _, part in ipairs(character:GetChildren()) do
+            if part:IsA("BasePart") then
+                part.LocalTransparencyModifier = 0
+            end
+        end
+    else
+        -- Balikin ke normal
+        for _, part in ipairs(character:GetChildren()) do
+            if part:IsA("BasePart") then
+                part.Transparency = 0
+                part.LocalTransparencyModifier = 0
+                part.CanCollide = true
+            end
+        end
+    end
+end
+
+-- === Toggle Button ===
+invisibleToggle.MouseButton1Click:Connect(function()
+    invisActive = not invisActive
+    if invisActive then
+        invisibleToggle.BackgroundColor3 = Color3.fromRGB(50, 200, 50)
+        invisibleToggle.Text = "ON"
+        setInvisible(true)
+    else
+        invisibleToggle.BackgroundColor3 = Color3.fromRGB(220, 50, 50)
+        invisibleToggle.Text = "OFF"
+        setInvisible(false)
+    end
+end)
 
     local selectedBase = nil
     local selectedNPC = nil
