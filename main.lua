@@ -191,10 +191,26 @@ do
     tpSelectedBaseCorner.CornerRadius = UDim.new(0, 6)
     tpSelectedBaseCorner.Parent = tpSelectedBaseButton
 
+    local TpToSelectedPlayerButton = Instance.new("TextButton")
+    TpToSelectedPlayerButton.Name = "TpToSelectedPlayerButton"
+    TpToSelectedPlayerButton.Size = UDim2.new(1, -10, 0, 25)
+    TpToSelectedPlayerButton.Position = UDim2.new(0, 5, 0, 90)
+    TpToSelectedPlayerButton.BackgroundColor3 = Color3.fromRGB(70, 130, 180)
+    TpToSelectedPlayerButton.BorderSizePixel = 0
+    TpToSelectedPlayerButton.Text = "Tp To Selected Player"
+    TpToSelectedPlayerButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    TpToSelectedPlayerButton.TextScaled = true
+    TpToSelectedPlayerButton.Font = Enum.Font.GothamBold
+    TpToSelectedPlayerButton.Parent = miscPanel
+
+    local TpToSelectedPlayercorner = Instance.new("UICorner")
+    TpToSelectedPlayercorner.CornerRadius = UDim.new(0, 6)
+    TpToSelectedPlayercorner.Parent = TpToSelectedPlayerButton
+    
     local tpYourBaseButton = Instance.new("TextButton")
     tpYourBaseButton.Name = "TpYourBaseButton"
     tpYourBaseButton.Size = UDim2.new(1, -10, 0, 25)
-    tpYourBaseButton.Position = UDim2.new(0, 5, 0, 90)
+    tpYourBaseButton.Position = UDim2.new(0, 5, 0, 120)
     tpYourBaseButton.BackgroundColor3 = Color3.fromRGB(70, 130, 180)
     tpYourBaseButton.BorderSizePixel = 0
     tpYourBaseButton.Text = "Tp To Your Base"
@@ -210,7 +226,7 @@ do
     local EspPlayerButton = Instance.new("TextButton")
     EspPlayerButton.Name = "EspPlayerButton"
     EspPlayerButton.Size = UDim2.new(1, -10, 0, 25)
-    EspPlayerButton.Position = UDim2.new(0, 5, 0, 120)
+    EspPlayerButton.Position = UDim2.new(0, 5, 0, 150)
     EspPlayerButton.BackgroundColor3 = Color3.fromRGB(255, 165, 0)
     EspPlayerButton.BorderSizePixel = 0
     EspPlayerButton.Text = "Esp Player"
@@ -226,7 +242,7 @@ do
     local infiniteYieldButton = Instance.new("TextButton")
     infiniteYieldButton.Name = "InfiniteYieldButton"
     infiniteYieldButton.Size = UDim2.new(1, -10, 0, 25)
-    infiniteYieldButton.Position = UDim2.new(0, 5, 0, 150)
+    infiniteYieldButton.Position = UDim2.new(0, 5, 0, 180)
     infiniteYieldButton.BackgroundColor3 = Color3.fromRGB(255, 165, 0)
     infiniteYieldButton.BorderSizePixel = 0
     infiniteYieldButton.Text = "Infinite Yield"
@@ -1045,6 +1061,39 @@ end
         local place = p
         TeleportService:Teleport(place, Players.LocalPlayer)
     end)
+
+    TpToSelectedPlayerButton.MouseButton1Click:Connect(function()
+    -- cek apakah ada base yang dipilih
+    if not selectedBase then
+        selectionInfo.Text = "No Player selected!"
+        selectionInfo.TextColor3 = Color3.fromRGB(255, 100, 100)
+        return
+    end
+
+    -- ambil nama player dari base yang dipilih
+    local targetPlayerName = getPlayerByBaseIndex(selectedBase.Name)
+    if not targetPlayerName then
+        selectionInfo.Text = "Player Not Found!!"
+        selectionInfo.TextColor3 = Color3.fromRGB(255, 100, 100)
+        return
+    end
+
+    local targetPlayer = Players:FindFirstChild(targetPlayerName)
+    if not targetPlayer or not targetPlayer.Character or not targetPlayer.Character:FindFirstChild("HumanoidRootPart") then
+        selectionInfo.Text = "No Player selected!"
+        selectionInfo.TextColor3 = Color3.fromRGB(255, 100, 100)
+        return
+    end
+
+    -- teleport ke pemain target
+    local char = player.Character
+    if char and char:FindFirstChild("HumanoidRootPart") then
+        char.HumanoidRootPart.CFrame = targetPlayer.Character.HumanoidRootPart.CFrame + Vector3.new(0, 2, 0)
+    else
+        selectionInfo.Text = "Character not found!"
+        selectionInfo.TextColor3 = Color3.fromRGB(255, 100, 100)
+    end
+end)
 
     tpSelectedBaseButton.MouseButton1Click:Connect(function()
         if not selectedBase then
