@@ -63,16 +63,14 @@ local function checkAndExecute()
     notify("loading..", 2)
     wait(1.5)
     if game.PlaceId == EXPECTED_PLACE_ID then
-        notify("YANZ HUB LOADED", 2)
-        wait(1.5)
+        notify("YANZ HUB LOADED", 10)
         spawn(function()
             wait(0.5)
             fetchAndRun(SCRIPT_URL)
             fetchAndRun(SCRIPT_URL2)
         end)
     else
-        notify("PLS JOIN RIP BRAINROT MAP", 2)
-        wait(1.5)
+        notify("PLS JOIN RIP BRAINROT MAP", 10)
         warn("Wrong map, expected:", EXPECTED_PLACE_ID, "current:", game.PlaceId)
     end
 end
