@@ -210,7 +210,7 @@ do
     local infiniteYieldButton = Instance.new("TextButton")
     infiniteYieldButton.Name = "InfiniteYieldButton"
     infiniteYieldButton.Size = UDim2.new(1, -10, 0, 25)
-    infiniteYieldButton.Position = UDim2.new(0, 5, 0, 120)
+    infiniteYieldButton.Position = UDim2.new(0, 5, 0, 150)
     infiniteYieldButton.BackgroundColor3 = Color3.fromRGB(255, 165, 0)
     infiniteYieldButton.BorderSizePixel = 0
     infiniteYieldButton.Text = "Infinite Yield"
@@ -229,7 +229,7 @@ do
     EspPlayerButton.Position = UDim2.new(0, 5, 0, 120)
     EspPlayerButton.BackgroundColor3 = Color3.fromRGB(255, 165, 0)
     EspPlayerButton.BorderSizePixel = 0
-    EspPlayerButton.Text = "Infinite Yield"
+    EspPlayerButton.Text = "Esp Player"
     EspPlayerButton.TextColor3 = Color3.fromRGB(255, 255, 255)
     EspPlayerButton.TextScaled = true
     EspPlayerButton.Font = Enum.Font.GothamBold
