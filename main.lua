@@ -223,6 +223,22 @@ do
     infiniteYieldCorner.CornerRadius = UDim.new(0, 6)
     infiniteYieldCorner.Parent = infiniteYieldButton
 
+    local EspPlayerButton = Instance.new("TextButton")
+    EspPlayerButton.Name = "EspPlayerButton"
+    EspPlayerButton.Size = UDim2.new(1, -10, 0, 25)
+    EspPlayerButton.Position = UDim2.new(0, 5, 0, 120)
+    EspPlayerButton.BackgroundColor3 = Color3.fromRGB(255, 165, 0)
+    EspPlayerButton.BorderSizePixel = 0
+    EspPlayerButton.Text = "Infinite Yield"
+    EspPlayerButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    EspPlayerButton.TextScaled = true
+    EspPlayerButton.Font = Enum.Font.GothamBold
+    EspPlayerButton.Parent = miscPanel
+
+    local EspPlayerCorner = Instance.new("UICorner")
+    EspPlayerCorner.CornerRadius = UDim.new(0, 6)
+    EspPlayerCorner.Parent = EspPlayerButton
+    
     local leftPanel = Instance.new("Frame")
     leftPanel.Name = "LeftPanel"
     leftPanel.Size = UDim2.new(0.4, -5, 1, 0)
@@ -432,139 +448,6 @@ do
     local autoLockToggleCorner = Instance.new("UICorner")
     autoLockToggleCorner.CornerRadius = UDim.new(0, 10)
     autoLockToggleCorner.Parent = autoLockToggle
-    
-    -- === ESP PLAYER TOGGLE ===
-local espPlayerFrame = Instance.new("Frame")
-espPlayerFrame.Name = "ESPPlayerFrame"
-espPlayerFrame.Size = UDim2.new(0, 250, 0, 30)
-espPlayerFrame.Position = UDim2.new(0, 10, 1, -105) -- atur posisi sesuai kebutuhan
-espPlayerFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
-espPlayerFrame.BorderSizePixel = 0
-espPlayerFrame.Parent = autoLockFrame.Parent  -- ✅ jadi bareng Auto Claim & Auto Lock
-
-local espPlayerCorner = Instance.new("UICorner")
-espPlayerCorner.CornerRadius = UDim.new(0, 6)
-espPlayerCorner.Parent = espPlayerFrame
-
-local espPlayerLabel = Instance.new("TextLabel")
-espPlayerLabel.Name = "ESPPlayerLabel"
-espPlayerLabel.Size = UDim2.new(0, 150, 1, 0)
-espPlayerLabel.Position = UDim2.new(0, 5, 0, 0)
-espPlayerLabel.BackgroundTransparency = 1
-espPlayerLabel.Text = "ESP Players:"
-espPlayerLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-espPlayerLabel.TextScaled = true
-espPlayerLabel.Font = Enum.Font.Gotham
-espPlayerLabel.TextXAlignment = Enum.TextXAlignment.Left
-espPlayerLabel.Parent = espPlayerFrame
-
-local espPlayerToggle = Instance.new("TextButton")
-espPlayerToggle.Name = "ESPPlayerToggle"
-espPlayerToggle.Size = UDim2.new(0, 60, 0, 20)
-espPlayerToggle.Position = UDim2.new(1, -65, 0, 5)
-espPlayerToggle.BackgroundColor3 = Color3.fromRGB(220, 50, 50)
-espPlayerToggle.BorderSizePixel = 0
-espPlayerToggle.Text = "OFF"
-espPlayerToggle.TextColor3 = Color3.fromRGB(255, 255, 255)
-espPlayerToggle.TextScaled = true
-espPlayerToggle.Font = Enum.Font.GothamBold
-espPlayerToggle.Parent = espPlayerFrame
-
-local espPlayerToggleCorner = Instance.new("UICorner")
-espPlayerToggleCorner.CornerRadius = UDim.new(0, 10)
-espPlayerToggleCorner.Parent = espPlayerToggle
-
--- === Logic ESP Players ===
-local espPlayerActive = false
-local playerESP = {}
-local Players = game:GetService("Players")
-local player = Players.LocalPlayer
-
-local function addESP(plr)
-    if plr == player then return end
-    if not plr.Character then return end
-
-    -- Highlight tubuh
-    local highlight = Instance.new("Highlight")
-    highlight.Name = "ESPHighlight"
-    highlight.FillColor = Color3.fromRGB(0, 255, 0)
-    highlight.FillTransparency = 0.5
-    highlight.OutlineTransparency = 0
-    highlight.Adornee = plr.Character
-    highlight.Parent = plr.Character
-
-    -- Nama di atas kepala
-    local head = plr.Character:FindFirstChild("Head")
-    if head and not head:FindFirstChild("ESPName") then
-        local billboard = Instance.new("BillboardGui")
-        billboard.Name = "ESPName"
-        billboard.Adornee = head
-        billboard.Size = UDim2.new(0, 100, 0, 20)
-        billboard.StudsOffset = Vector3.new(0, 3, 0)
-        billboard.AlwaysOnTop = true
-        billboard.Parent = head
-
-        local label = Instance.new("TextLabel")
-        label.Size = UDim2.new(1, 0, 1, 0)
-        label.BackgroundTransparency = 1
-        label.Text = plr.Name
-        label.TextColor3 = Color3.fromRGB(0, 255, 0)
-        label.TextScaled = true
-        label.Font = Enum.Font.GothamBold
-        label.Parent = billboard
-    end
-
-    playerESP[plr] = true
-end
-
-local function removeESP(plr)
-    if plr.Character then
-        local highlight = plr.Character:FindFirstChild("ESPHighlight")
-        if highlight then highlight:Destroy() end
-        local head = plr.Character:FindFirstChild("Head")
-        if head and head:FindFirstChild("ESPName") then
-            head.ESPName:Destroy()
-        end
-    end
-    playerESP[plr] = nil
-end
-
-espPlayerToggle.MouseButton1Click:Connect(function()
-    espPlayerActive = not espPlayerActive
-    if espPlayerActive then
-        espPlayerToggle.BackgroundColor3 = Color3.fromRGB(50, 200, 50)
-        espPlayerToggle.Text = "ON"
-
-        for _,plr in pairs(Players:GetPlayers()) do
-            addESP(plr)
-            plr.CharacterAdded:Connect(function()
-                if espPlayerActive then
-                    wait(1)
-                    addESP(plr)
-                end
-            end)
-        end
-
-        Players.PlayerAdded:Connect(function(plr)
-            if espPlayerActive then
-                plr.CharacterAdded:Connect(function()
-                    wait(1)
-                    addESP(plr)
-                end)
-            end
-        end)
-
-        Players.PlayerRemoving:Connect(function(plr)
-            removeESP(plr)
-        end)
-    else
-        espPlayerToggle.BackgroundColor3 = Color3.fromRGB(220, 50, 50)
-        espPlayerToggle.Text = "OFF"
-        for plr,_ in pairs(playerESP) do
-            removeESP(plr)
-        end
-    end
-end)
     
     local selectedBase = nil
     local selectedNPC = nil
@@ -1545,6 +1428,86 @@ end
         loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Infinite-Yield-43437"))()
         Yanz.Console.info("Infinite Yield loaded successfully")
     end)
+local espEnabled = false
+local espConnections = {}
+
+local function addESP(plr)
+    if plr ~= player then
+        local function applyESP(char)
+            if not char:FindFirstChild("ESP_Highlight") then
+                local hl = Instance.new("Highlight")
+                hl.Name = "ESP_Highlight"
+                hl.FillColor = Color3.fromRGB(0, 255, 0)
+                hl.OutlineColor = Color3.fromRGB(0, 255, 0)
+                hl.Adornee = char
+                hl.Parent = char
+            end
+
+            if not char:FindFirstChild("ESP_Name") then
+                local billboard = Instance.new("BillboardGui")
+                billboard.Name = "ESP_Name"
+                billboard.Adornee = char:FindFirstChild("Head") or char:FindFirstChildWhichIsA("BasePart")
+                billboard.Size = UDim2.new(0, 200, 0, 50)
+                billboard.StudsOffset = Vector3.new(0, 3, 0)
+                billboard.AlwaysOnTop = true
+
+                local nameLabel = Instance.new("TextLabel")
+                nameLabel.Size = UDim2.new(1, 0, 1, 0)
+                nameLabel.BackgroundTransparency = 1
+                nameLabel.Text = plr.Name
+                nameLabel.TextColor3 = Color3.fromRGB(0, 255, 0)
+                nameLabel.TextScaled = true
+                nameLabel.Font = Enum.Font.GothamBold
+                nameLabel.Parent = billboard
+
+                billboard.Parent = char
+            end
+        end
+
+        -- apply langsung kalau player sudah ada character
+        if plr.Character then
+            applyESP(plr.Character)
+        end
+
+        -- apply lagi setiap respawn
+        local con = plr.CharacterAdded:Connect(function(char)
+            task.wait(1)
+            applyESP(char)
+        end)
+        table.insert(espConnections, con)
+    end
+end
+
+local function removeESP()
+    for _, plr in pairs(Players:GetPlayers()) do
+        if plr.Character then
+            local hl = plr.Character:FindFirstChild("ESP_Highlight")
+            local name = plr.Character:FindFirstChild("ESP_Name")
+            if hl then hl:Destroy() end
+            if name then name:Destroy() end
+        end
+    end
+    for _, con in pairs(espConnections) do
+        con:Disconnect()
+    end
+    espConnections = {}
+end
+
+EspPlayerButton.MouseButton1Click:Connect(function()
+    espEnabled = not espEnabled
+    if espEnabled then
+        -- Nyalakan ESP
+        for _, plr in pairs(Players:GetPlayers()) do
+            addESP(plr)
+        end
+        table.insert(espConnections, Players.PlayerAdded:Connect(addESP))
+        print("ESP ON")
+    else
+        -- Matikan ESP
+        removeESP()
+        print("ESP OFF")
+    end
+end)
 
     Players.PlayerAdded:Connect(function(plr)
         Yanz.Console.info("Player " .. plr.Name .. " joined")
