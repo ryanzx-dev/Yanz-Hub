@@ -433,6 +433,218 @@ do
     autoLockToggleCorner.CornerRadius = UDim.new(0, 10)
     autoLockToggleCorner.Parent = autoLockToggle
 
+-- === ESP BASE TIMER TOGGLE ===
+local espBaseFrame = Instance.new("Frame")
+espBaseFrame.Name = "ESPBaseFrame"
+espBaseFrame.Size = UDim2.new(0, 250, 0, 30)
+espBaseFrame.Position = UDim2.new(0, 10, 1, -140) -- di bawah ESP Player
+espBaseFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+espBaseFrame.BorderSizePixel = 0
+espBaseFrame.Parent = mainFrame
+
+local espBaseCorner = Instance.new("UICorner")
+espBaseCorner.CornerRadius = UDim.new(0, 6)
+espBaseCorner.Parent = espBaseFrame
+
+local espBaseLabel = Instance.new("TextLabel")
+espBaseLabel.Name = "ESPBaseLabel"
+espBaseLabel.Size = UDim2.new(0, 150, 1, 0)
+espBaseLabel.Position = UDim2.new(0, 5, 0, 0)
+espBaseLabel.BackgroundTransparency = 1
+espBaseLabel.Text = "ESP Base Timer:"
+espBaseLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+espBaseLabel.TextScaled = true
+espBaseLabel.Font = Enum.Font.Gotham
+espBaseLabel.TextXAlignment = Enum.TextXAlignment.Left
+espBaseLabel.Parent = espBaseFrame
+
+local espBaseToggle = Instance.new("TextButton")
+espBaseToggle.Name = "ESPBaseToggle"
+espBaseToggle.Size = UDim2.new(0, 60, 0, 20)
+espBaseToggle.Position = UDim2.new(1, -65, 0, 5)
+espBaseToggle.BackgroundColor3 = Color3.fromRGB(220, 50, 50)
+espBaseToggle.BorderSizePixel = 0
+espBaseToggle.Text = "OFF"
+espBaseToggle.TextColor3 = Color3.fromRGB(255, 255, 255)
+espBaseToggle.TextScaled = true
+espBaseToggle.Font = Enum.Font.GothamBold
+espBaseToggle.Parent = espBaseFrame
+
+local espBaseToggleCorner = Instance.new("UICorner")
+espBaseToggleCorner.CornerRadius = UDim.new(0, 10)
+espBaseToggleCorner.Parent = espBaseToggle
+
+local espBaseActive = false
+local baseESP = {}
+
+local function addBaseTimer(base)
+    if not base:IsA("Model") then return end
+    if baseESP[base] then return end
+    local plot = base:FindFirstChild("PlotTeritory") or base.PrimaryPart
+    if not plot then return end
+
+    local billboard = Instance.new("BillboardGui")
+    billboard.Name = "BaseTimerESP"
+    billboard.Adornee = plot
+    billboard.Size = UDim2.new(0, 100, 0, 20)
+    billboard.StudsOffset = Vector3.new(0, 5, 0)
+    billboard.AlwaysOnTop = true
+    billboard.Parent = plot
+
+    local label = Instance.new("TextLabel")
+    label.Size = UDim2.new(1, 0, 1, 0)
+    label.BackgroundTransparency = 1
+    label.Text = "0"
+    label.TextColor3 = Color3.fromRGB(50, 200, 255)
+    label.TextScaled = true
+    label.Font = Enum.Font.GothamBold
+    label.Parent = billboard
+
+    baseESP[base] = {gui = billboard, label = label}
+end
+
+local function removeBaseTimer(base)
+    if baseESP[base] then
+        baseESP[base].gui:Destroy()
+        baseESP[base] = nil
+    end
+end
+
+espBaseToggle.MouseButton1Click:Connect(function()
+    espBaseActive = not espBaseActive
+    if espBaseActive then
+        espBaseToggle.BackgroundColor3 = Color3.fromRGB(50, 200, 50)
+        espBaseToggle.Text = "ON"
+        local basesFolder = workspace:FindFirstChild("Bases")
+        if basesFolder then
+            for _,b in pairs(basesFolder:GetChildren()) do
+                addBaseTimer(b)
+            end
+            basesFolder.ChildAdded:Connect(addBaseTimer)
+            basesFolder.ChildRemoved:Connect(removeBaseTimer)
+        end
+
+        -- update loop
+        spawn(function()
+            while espBaseActive do
+                local basesFolder = workspace:FindFirstChild("Bases")
+                if basesFolder then
+                    for _,b in pairs(basesFolder:GetChildren()) do
+                        if baseESP[b] then
+                            -- ambil atribut waktu dari base
+                            local t = b:GetAttribute("LockTime") or 0
+                            baseESP[b].label.Text = tostring(t)
+                        end
+                    end
+                end
+                wait(1)
+            end
+        end)
+    else
+        espBaseToggle.BackgroundColor3 = Color3.fromRGB(220, 50, 50)
+        espBaseToggle.Text = "OFF"
+        for b,_ in pairs(baseESP) do
+            removeBaseTimer(b)
+        end
+    end
+end)
+
+-- === ESP PLAYER TOGGLE ===
+local espPlayerFrame = Instance.new("Frame")
+espPlayerFrame.Name = "ESPPlayerFrame"
+espPlayerFrame.Size = UDim2.new(0, 250, 0, 30)
+espPlayerFrame.Position = UDim2.new(0, 10, 1, -105) -- posisikan di bawah AutoLock
+espPlayerFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+espPlayerFrame.BorderSizePixel = 0
+espPlayerFrame.Parent = mainFrame
+
+local espPlayerCorner = Instance.new("UICorner")
+espPlayerCorner.CornerRadius = UDim.new(0, 6)
+espPlayerCorner.Parent = espPlayerFrame
+
+local espPlayerLabel = Instance.new("TextLabel")
+espPlayerLabel.Name = "ESPPlayerLabel"
+espPlayerLabel.Size = UDim2.new(0, 150, 1, 0)
+espPlayerLabel.Position = UDim2.new(0, 5, 0, 0)
+espPlayerLabel.BackgroundTransparency = 1
+espPlayerLabel.Text = "ESP Players:"
+espPlayerLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+espPlayerLabel.TextScaled = true
+espPlayerLabel.Font = Enum.Font.Gotham
+espPlayerLabel.TextXAlignment = Enum.TextXAlignment.Left
+espPlayerLabel.Parent = espPlayerFrame
+
+local espPlayerToggle = Instance.new("TextButton")
+espPlayerToggle.Name = "ESPPlayerToggle"
+espPlayerToggle.Size = UDim2.new(0, 60, 0, 20)
+espPlayerToggle.Position = UDim2.new(1, -65, 0, 5)
+espPlayerToggle.BackgroundColor3 = Color3.fromRGB(220, 50, 50)
+espPlayerToggle.BorderSizePixel = 0
+espPlayerToggle.Text = "OFF"
+espPlayerToggle.TextColor3 = Color3.fromRGB(255, 255, 255)
+espPlayerToggle.TextScaled = true
+espPlayerToggle.Font = Enum.Font.GothamBold
+espPlayerToggle.Parent = espPlayerFrame
+
+local espPlayerToggleCorner = Instance.new("UICorner")
+espPlayerToggleCorner.CornerRadius = UDim.new(0, 10)
+espPlayerToggleCorner.Parent = espPlayerToggle
+
+local espPlayerActive = false
+local playerESP = {}
+
+local function addESP(plr)
+    if plr == player then return end
+    if not plr.Character then return end
+    local head = plr.Character:FindFirstChild("Head")
+    if not head then return end
+
+    local billboard = Instance.new("BillboardGui")
+    billboard.Name = "ESPTag"
+    billboard.Adornee = head
+    billboard.Size = UDim2.new(0, 100, 0, 20)
+    billboard.StudsOffset = Vector3.new(0, 3, 0)
+    billboard.AlwaysOnTop = true
+    billboard.Parent = head
+
+    local label = Instance.new("TextLabel")
+    label.Size = UDim2.new(1, 0, 1, 0)
+    label.BackgroundTransparency = 1
+    label.Text = plr.Name
+    label.TextColor3 = Color3.fromRGB(255, 50, 50)
+    label.TextScaled = true
+    label.Font = Enum.Font.GothamBold
+    label.Parent = billboard
+
+    playerESP[plr] = billboard
+end
+
+local function removeESP(plr)
+    if playerESP[plr] then
+        playerESP[plr]:Destroy()
+        playerESP[plr] = nil
+    end
+end
+
+espPlayerToggle.MouseButton1Click:Connect(function()
+    espPlayerActive = not espPlayerActive
+    if espPlayerActive then
+        espPlayerToggle.BackgroundColor3 = Color3.fromRGB(50, 200, 50)
+        espPlayerToggle.Text = "ON"
+        for _,plr in pairs(Players:GetPlayers()) do
+            addESP(plr)
+        end
+        Players.PlayerAdded:Connect(addESP)
+        Players.PlayerRemoving:Connect(removeESP)
+    else
+        espPlayerToggle.BackgroundColor3 = Color3.fromRGB(220, 50, 50)
+        espPlayerToggle.Text = "OFF"
+        for plr,_ in pairs(playerESP) do
+            removeESP(plr)
+        end
+    end
+end)
+
     local selectedBase = nil
     local selectedNPC = nil
     local bases = {}
