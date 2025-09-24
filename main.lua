@@ -440,7 +440,7 @@ espPlayerFrame.Size = UDim2.new(0, 250, 0, 30)
 espPlayerFrame.Position = UDim2.new(0, 10, 1, -105) -- atur posisi sesuai kebutuhan
 espPlayerFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
 espPlayerFrame.BorderSizePixel = 0
-espPlayerFrame.Parent = mainFrame -- ✅ langsung di mainFrame
+espPlayerFrame.Parent = autoLockFrame.Parent  -- ✅ jadi bareng Auto Claim & Auto Lock
 
 local espPlayerCorner = Instance.new("UICorner")
 espPlayerCorner.CornerRadius = UDim.new(0, 6)
