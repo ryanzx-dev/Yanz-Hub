@@ -207,22 +207,6 @@ do
     tpYourBaseCorner.CornerRadius = UDim.new(0, 6)
     tpYourBaseCorner.Parent = tpYourBaseButton
 
-    local infiniteYieldButton = Instance.new("TextButton")
-    infiniteYieldButton.Name = "InfiniteYieldButton"
-    infiniteYieldButton.Size = UDim2.new(1, -10, 0, 25)
-    infiniteYieldButton.Position = UDim2.new(0, 5, 0, 150)
-    infiniteYieldButton.BackgroundColor3 = Color3.fromRGB(255, 165, 0)
-    infiniteYieldButton.BorderSizePixel = 0
-    infiniteYieldButton.Text = "Infinite Yield"
-    infiniteYieldButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-    infiniteYieldButton.TextScaled = true
-    infiniteYieldButton.Font = Enum.Font.GothamBold
-    infiniteYieldButton.Parent = miscPanel
-
-    local infiniteYieldCorner = Instance.new("UICorner")
-    infiniteYieldCorner.CornerRadius = UDim.new(0, 6)
-    infiniteYieldCorner.Parent = infiniteYieldButton
-
     local EspPlayerButton = Instance.new("TextButton")
     EspPlayerButton.Name = "EspPlayerButton"
     EspPlayerButton.Size = UDim2.new(1, -10, 0, 25)
@@ -239,6 +223,22 @@ do
     EspPlayerCorner.CornerRadius = UDim.new(0, 6)
     EspPlayerCorner.Parent = EspPlayerButton
     
+    local infiniteYieldButton = Instance.new("TextButton")
+    infiniteYieldButton.Name = "InfiniteYieldButton"
+    infiniteYieldButton.Size = UDim2.new(1, -10, 0, 25)
+    infiniteYieldButton.Position = UDim2.new(0, 5, 0, 150)
+    infiniteYieldButton.BackgroundColor3 = Color3.fromRGB(255, 165, 0)
+    infiniteYieldButton.BorderSizePixel = 0
+    infiniteYieldButton.Text = "Infinite Yield"
+    infiniteYieldButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    infiniteYieldButton.TextScaled = true
+    infiniteYieldButton.Font = Enum.Font.GothamBold
+    infiniteYieldButton.Parent = miscPanel
+
+    local infiniteYieldCorner = Instance.new("UICorner")
+    infiniteYieldCorner.CornerRadius = UDim.new(0, 6)
+    infiniteYieldCorner.Parent = infiniteYieldButton
+
     local leftPanel = Instance.new("Frame")
     leftPanel.Name = "LeftPanel"
     leftPanel.Size = UDim2.new(0.4, -5, 1, 0)
