@@ -245,7 +245,7 @@ do
     PartFlyButton.Position = UDim2.new(0, 5, 0, 180)
     PartFlyButton.BackgroundColor3 = Color3.fromRGB(70, 130, 180)
     PartFlyButton.BorderSizePixel = 0
-    PartFlyButton.Text = "Inf Jump"
+    PartFlyButton.Text = "Part Fly (jump)"
     PartFlyButton.TextColor3 = Color3.fromRGB(255, 255, 255)
     PartFlyButton.TextScaled = true
     PartFlyButton.Font = Enum.Font.GothamBold
@@ -1612,7 +1612,6 @@ local function enableInfJump()
         end
     end)
     print("INF JUMP ON")
-    infinityJumpButton.Text = "ON"
     infinityJumpButton.BackgroundColor3 = Color3.fromRGB(50, 200, 50)
 end
 
@@ -1625,7 +1624,6 @@ local function disableInfJump()
         infJumpConnection = nil
     end
     print("INF JUMP OFF")
-    infinityJumpButton.Text = "OFF"
     infinityJumpButton.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
 end
 
@@ -1706,7 +1704,6 @@ local function enablePartFly()
     end)
 
     print("Part Fly ON")
-    PartFlyButton.Text = "ON"
     PartFlyButton.BackgroundColor3 = Color3.fromRGB(50, 200, 50)
 end
 
@@ -1717,7 +1714,6 @@ local function disablePartFly()
     if flyConn then flyConn:Disconnect() flyConn=nil end
     if flyPart then flyPart:Destroy() flyPart=nil end
     print("Part Fly OFF")
-    PartFlyButton.Text = "OFF"
     PartFlyButton.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
 end
 
