@@ -70,7 +70,7 @@ local function checkAndExecute()
             fetchAndRun(SCRIPT_URL2)
         end)
     else
-        notify("PLS JOIN RIP BRAINROT MAP", 10)
+        notify("WRONG MAP. LOL!", 10)
         warn("Wrong map, expected:", EXPECTED_PLACE_ID, "current:", game.PlaceId)
     end
 end
