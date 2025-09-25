@@ -223,10 +223,42 @@ do
     tpYourBaseCorner.CornerRadius = UDim.new(0, 6)
     tpYourBaseCorner.Parent = tpYourBaseButton
 
+    local infinityJumpButton = Instance.new("TextButton")
+    infinityJumpButton.Name = "infinityJumpButton"
+    infinityJumpButton.Size = UDim2.new(1, -10, 0, 25)
+    infinityJumpButton.Position = UDim2.new(0, 5, 0, 150)
+    infinityJumpButton.BackgroundColor3 = Color3.fromRGB(70, 130, 180)
+    infinityJumpButton.BorderSizePixel = 0
+    infinityJumpButton.Text = "Inf Jump"
+    infinityJumpButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    infinityJumpButton.TextScaled = true
+    infinityJumpButton.Font = Enum.Font.GothamBold
+    infinityJumpButton.Parent = miscPanel
+
+    local infinityJumpCorner = Instance.new("UICorner")
+    infinityJumpCorner.CornerRadius = UDim.new(0, 6)
+    infinityJumpCorner.Parent = infinityJumpButton
+    
+    local PartFlyButton = Instance.new("TextButton")
+    PartFlyButton.Name = "PartFlyButton"
+    PartFlyButton.Size = UDim2.new(1, -10, 0, 25)
+    PartFlyButton.Position = UDim2.new(0, 5, 0, 180)
+    PartFlyButton.BackgroundColor3 = Color3.fromRGB(70, 130, 180)
+    PartFlyButton.BorderSizePixel = 0
+    PartFlyButton.Text = "Inf Jump"
+    PartFlyButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    PartFlyButton.TextScaled = true
+    PartFlyButton.Font = Enum.Font.GothamBold
+    PartFlyButton.Parent = miscPanel
+
+    local PartFlyCorner = Instance.new("UICorner")
+    PartFlyCorner.CornerRadius = UDim.new(0, 6)
+    PartFlyCorner.Parent = PartFlyButton
+    
     local EspPlayerButton = Instance.new("TextButton")
     EspPlayerButton.Name = "EspPlayerButton"
     EspPlayerButton.Size = UDim2.new(1, -10, 0, 25)
-    EspPlayerButton.Position = UDim2.new(0, 5, 0, 150)
+    EspPlayerButton.Position = UDim2.new(0, 5, 0, 210)
     EspPlayerButton.BackgroundColor3 = Color3.fromRGB(255, 165, 0)
     EspPlayerButton.BorderSizePixel = 0
     EspPlayerButton.Text = "Esp Player"
@@ -242,7 +274,7 @@ do
     local infiniteYieldButton = Instance.new("TextButton")
     infiniteYieldButton.Name = "InfiniteYieldButton"
     infiniteYieldButton.Size = UDim2.new(1, -10, 0, 25)
-    infiniteYieldButton.Position = UDim2.new(0, 5, 0, 180)
+    infiniteYieldButton.Position = UDim2.new(0, 5, 0, 240)
     infiniteYieldButton.BackgroundColor3 = Color3.fromRGB(255, 165, 0)
     infiniteYieldButton.BorderSizePixel = 0
     infiniteYieldButton.Text = "Infinite Yield"
@@ -1555,6 +1587,146 @@ EspPlayerButton.MouseButton1Click:Connect(function()
         -- Matikan ESP
         removeESP()
         print("ESP OFF")
+    end
+end)
+
+-- Infinite Jump Functions
+local Players = game:GetService("Players")
+local UserInputService = game:GetService("UserInputService")
+
+local player = Players.LocalPlayer
+local infJumpEnabled = false
+local infJumpConnection
+
+-- function ON
+local function enableInfJump()
+    if infJumpEnabled then return end
+    infJumpEnabled = true
+    infJumpConnection = UserInputService.JumpRequest:Connect(function()
+        local character = player.Character
+        if character then
+            local humanoid = character:FindFirstChildOfClass("Humanoid")
+            if humanoid then
+                humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+            end
+        end
+    end)
+    print("INF JUMP ON")
+    infinityJumpButton.Text = "ON"
+    infinityJumpButton.BackgroundColor3 = Color3.fromRGB(50, 200, 50)
+end
+
+-- function OFF
+local function disableInfJump()
+    if not infJumpEnabled then return end
+    infJumpEnabled = false
+    if infJumpConnection then
+        infJumpConnection:Disconnect()
+        infJumpConnection = nil
+    end
+    print("INF JUMP OFF")
+    infinityJumpButton.Text = "OFF"
+    infinityJumpButton.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
+end
+
+-- tombol toggle
+infinityJumpButton.MouseButton1Click:Connect(function()
+    if infJumpEnabled then
+        disableInfJump()
+    else
+        enableInfJump()
+    end
+end)
+
+-- Part Fly Toggle
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+
+local player = Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local hrp = character:WaitForChild("HumanoidRootPart")
+
+local flyEnabled = false
+local flyPart
+local flyConn
+local moveDir = Vector3.zero
+local flySpeed = 5 -- atur kecepatan
+
+-- Input arah
+UserInputService.InputBegan:Connect(function(input, gpe)
+    if gpe then return end
+    if input.KeyCode == Enum.KeyCode.W then moveDir = moveDir + Vector3.new(0,0,-1) end
+    if input.KeyCode == Enum.KeyCode.S then moveDir = moveDir + Vector3.new(0,0,1) end
+    if input.KeyCode == Enum.KeyCode.A then moveDir = moveDir + Vector3.new(-1,0,0) end
+    if input.KeyCode == Enum.KeyCode.D then moveDir = moveDir + Vector3.new(1,0,0) end
+    if input.KeyCode == Enum.KeyCode.Space then moveDir = moveDir + Vector3.new(0,1,0) end
+    if input.KeyCode == Enum.KeyCode.LeftShift then moveDir = moveDir + Vector3.new(0,-1,0) end
+end)
+
+UserInputService.InputEnded:Connect(function(input, gpe)
+    if gpe then return end
+    if input.KeyCode == Enum.KeyCode.W then moveDir = moveDir - Vector3.new(0,0,-1) end
+    if input.KeyCode == Enum.KeyCode.S then moveDir = moveDir - Vector3.new(0,0,1) end
+    if input.KeyCode == Enum.KeyCode.A then moveDir = moveDir - Vector3.new(-1,0,0) end
+    if input.KeyCode == Enum.KeyCode.D then moveDir = moveDir - Vector3.new(1,0,0) end
+    if input.KeyCode == Enum.KeyCode.Space then moveDir = moveDir - Vector3.new(0,1,0) end
+    if input.KeyCode == Enum.KeyCode.LeftShift then moveDir = moveDir - Vector3.new(0,-1,0) end
+end)
+
+-- Function ON
+local function enablePartFly()
+    if flyEnabled then return end
+    flyEnabled = true
+
+    flyPart = Instance.new("Part")
+    flyPart.Size = Vector3.new(6,1,6)
+    flyPart.Anchored = true
+    flyPart.CanCollide = true
+    flyPart.Color = Color3.fromRGB(0, 200, 255)
+    flyPart.Material = Enum.Material.Neon
+    flyPart.Transparency = 0 -- ✅ kelihatan untuk diri sendiri
+    flyPart.Name = "FlyPlatform"
+    flyPart.Parent = workspace.CurrentCamera -- ✅ hanya client yang lihat
+
+    flyConn = RunService.RenderStepped:Connect(function()
+        if not hrp or not hrp.Parent then return end
+        local camCF = workspace.CurrentCamera.CFrame
+        local dir = (camCF.RightVector * moveDir.X + camCF.LookVector * moveDir.Z + Vector3.new(0, moveDir.Y, 0))
+        if dir.Magnitude > 0 then
+            dir = dir.Unit * flySpeed
+        end
+
+        -- posisikan part di bawah kaki
+        local newPos = hrp.Position + dir - Vector3.new(0, (hrp.Size.Y/2 + 3), 0)
+        flyPart.CFrame = CFrame.new(newPos)
+
+        -- geser HRP
+        hrp.CFrame = hrp.CFrame + dir
+    end)
+
+    print("Part Fly ON")
+    PartFlyButton.Text = "ON"
+    PartFlyButton.BackgroundColor3 = Color3.fromRGB(50, 200, 50)
+end
+
+-- Function OFF
+local function disablePartFly()
+    if not flyEnabled then return end
+    flyEnabled = false
+    if flyConn then flyConn:Disconnect() flyConn=nil end
+    if flyPart then flyPart:Destroy() flyPart=nil end
+    print("Part Fly OFF")
+    PartFlyButton.Text = "OFF"
+    PartFlyButton.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
+end
+
+-- Tombol Toggle
+PartFlyButton.MouseButton1Click:Connect(function()
+    if flyEnabled then
+        disablePartFly()
+    else
+        enablePartFly()
     end
 end)
 
